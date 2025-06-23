@@ -8,7 +8,9 @@ import com.bank.mybank.repository.AccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +30,11 @@ public class AccountService {
 
     public AccountResDto createAccount(AccountReqDto reqDto) {
         Account entity = mapper.toEntity(reqDto);
+
+        entity.setAccountNumber(String.valueOf(UUID.randomUUID()));
+        entity.setDateCreated(LocalDateTime.now().withNano(0));
+        entity.setBranchCode("470010");
+
         Account saved = accountRepo.save(entity);
         return mapper.toResDto(saved);
     }
