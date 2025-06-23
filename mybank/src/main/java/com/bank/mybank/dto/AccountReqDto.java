@@ -9,5 +9,11 @@ import lombok.*;
 @NoArgsConstructor
 public class AccountReqDto {
 
-    private String accHolderName;
+    private String accountHolderName;
+    private int age;
+    private String accountType;
+    private String email;
+    private String phoneNumber;
+    private String nationality;
+    private String occupation;
 }
