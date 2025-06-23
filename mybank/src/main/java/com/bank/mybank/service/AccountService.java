@@ -8,6 +8,9 @@ import com.bank.mybank.repository.AccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class AccountService {
 
@@ -29,4 +32,9 @@ public class AccountService {
         return mapper.toResDto(saved);
     }
 
+    public List<AccountResDto> viewAccount() {
+        return accountRepo.findAll().stream()
+                .map(mapper::toResDto)
+                .collect(Collectors.toList());
+    }
 }

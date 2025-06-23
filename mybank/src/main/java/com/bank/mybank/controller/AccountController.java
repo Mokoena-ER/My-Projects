@@ -7,6 +7,8 @@ import com.bank.mybank.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/account")
 @CrossOrigin("*")
@@ -24,5 +26,9 @@ public class AccountController {
         return accountService.createAccount(reqDto);
     }
 
+    @GetMapping
+    public List<AccountResDto> viewAccount() {
+        return accountService.viewAccount();
+    }
 
 }
