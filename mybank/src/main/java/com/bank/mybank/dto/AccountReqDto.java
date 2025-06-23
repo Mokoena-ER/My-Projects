@@ -1,0 +1,13 @@
+package com.bank.mybank.dto;
+
+import lombok.*;
+
+@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class AccountReqDto {
+
+    private String accHolderName;
+}
