@@ -29,12 +29,17 @@ public class AccountService {
     }
 
     public void setBranchCode(Account entity) {
-        String nationality = entity.getNationality();
 
-        if (nationality.equalsIgnoreCase("RSA")) {
+        if (entity.getNationality().equalsIgnoreCase("RSA")) {
             entity.setBranchCode("470010");
         } else {
-            entity.setBranchCode("470010-"+nationality);
+            entity.setBranchCode("470010-"+entity.getNationality().toUpperCase());
+        }
+
+        if (entity.getBalance() > 0) {
+            entity.setStatus("Active");
+        }else {
+            entity.setStatus("Pending");
         }
     }
 

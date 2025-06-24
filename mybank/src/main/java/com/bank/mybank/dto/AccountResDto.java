@@ -28,5 +28,6 @@ public class AccountResDto {
     private String accountNumber;
     private String branchCode;
     private String status;
+    private double balance;
     private LocalDateTime dateCreated;
 }
