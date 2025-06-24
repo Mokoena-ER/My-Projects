@@ -54,9 +54,57 @@ public class AccountService {
         return mapper.toResDto(saved);
     }
 
+    public AccountResDto updateAccount(Account entity, AccountReqDto reqDto) {
+        Account existingAccount = accountRepo.findByAccountNumber(entity.getAccountNumber());
+
+        if (reqDto.getAccountHolderName() != null && !reqDto.getAccountHolderName().isEmpty()) {
+            existingAccount.setAccountHolderName(reqDto.getAccountHolderName());
+        }else {
+            existingAccount.setAccountHolderName(existingAccount.getAccountHolderName());
+        }
+        if ((reqDto.getAccountType() != null && !reqDto.getAccountType().isEmpty())){
+            existingAccount.setAccountType(reqDto.getAccountType());
+        }else {
+            existingAccount.setAccountType(existingAccount.getAccountType());
+        }
+        if (reqDto.getEmail() != null && !reqDto.getEmail().isEmpty()) {
+            existingAccount.setEmail(reqDto.getEmail());
+        }else {
+            existingAccount.setEmail(existingAccount.getEmail());
+        }
+        if (reqDto.getPhoneNumber() != null && !reqDto.getPhoneNumber().isEmpty()) {
+            existingAccount.setPhoneNumber(reqDto.getPhoneNumber());
+        }else {
+            existingAccount.setPhoneNumber(existingAccount.getPhoneNumber());
+        }
+        if (reqDto.getNationality() != null && !reqDto.getNationality().isEmpty()) {
+            existingAccount.setNationality(reqDto.getNationality());
+        }else {
+            existingAccount.setNationality(existingAccount.getNationality());
+        }
+        if (reqDto.getOccupation() != null && !reqDto.getOccupation().isEmpty()) {
+            existingAccount.setOccupation(reqDto.getOccupation());
+        }else {
+            existingAccount.setOccupation(existingAccount.getOccupation());
+        }
+        if (reqDto.getAge() != null) {
+            existingAccount.setAge(reqDto.getAge());
+        }else {
+            existingAccount.setAge(existingAccount.getAge());
+        }
+
+        existingAccount.setDateUpdated(LocalDateTime.now().withNano(0));
+        setBranchCode(existingAccount);
+
+        Account updated = accountRepo.save(existingAccount);
+
+        return mapper.toResDto(updated);
+    }
+
     public Map<String, List<AccountResDto>> viewAccount() {
         return accountRepo.findAll().stream()
                 .map(mapper::toResDto)
                 .collect(Collectors.groupingBy(a -> a.getOccupation()));
     }
+
 }

@@ -32,4 +32,9 @@ public class AccountController {
         return accountService.viewAccount();
     }
 
+    @PutMapping("/update")
+    public AccountResDto updateAccount(@RequestBody Account entity, @RequestBody AccountReqDto reqDto) {
+        return accountService.updateAccount(entity, reqDto);
+    }
+
 }

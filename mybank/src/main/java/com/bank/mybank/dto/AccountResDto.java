@@ -30,4 +30,5 @@ public class AccountResDto {
     private String status;
     private double balance;
     private LocalDateTime dateCreated;
+    private LocalDateTime dateUpdated;
 }

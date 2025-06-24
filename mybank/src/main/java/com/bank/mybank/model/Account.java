@@ -19,7 +19,7 @@ public class Account {
     private Long Id;
 
     private String accountHolderName;
-    private int age;
+    private Integer age;
     private String accountType;
     private String email;
     private String phoneNumber;
@@ -31,5 +31,6 @@ public class Account {
     private String branchCode;
     private String status;
     private LocalDateTime dateCreated;
+    private LocalDateTime dateUpdated;
     private double balance;
 }

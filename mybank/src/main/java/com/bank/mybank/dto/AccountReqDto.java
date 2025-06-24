@@ -10,7 +10,7 @@ import lombok.*;
 public class AccountReqDto {
 
     private String accountHolderName;
-    private int age;
+    private Integer age;
     private String accountType;
     private String email;
     private String phoneNumber;
