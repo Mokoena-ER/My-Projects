@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -39,9 +40,9 @@ public class AccountService {
         return mapper.toResDto(saved);
     }
 
-    public List<AccountResDto> viewAccount() {
+    public Map<String, List<AccountResDto>> viewAccount() {
         return accountRepo.findAll().stream()
                 .map(mapper::toResDto)
-                .collect(Collectors.toList());
+                .collect(Collectors.groupingBy(a -> a.getOccupation()));
     }
 }
