@@ -28,13 +28,22 @@ public class AccountService {
         this.mapper = mapper;
     }
 
+    public void setBranchCode(Account entity) {
+        String nationality = entity.getNationality();
+
+        if (nationality.equalsIgnoreCase("RSA")) {
+            entity.setBranchCode("470010");
+        } else {
+            entity.setBranchCode("470010-"+nationality);
+        }
+    }
 
     public AccountResDto createAccount(AccountReqDto reqDto) {
         Account entity = mapper.toEntity(reqDto);
 
         entity.setAccountNumber(String.valueOf(UUID.randomUUID()));
         entity.setDateCreated(LocalDateTime.now().withNano(0));
-        entity.setBranchCode("470010");
+        setBranchCode(entity);
 
         Account saved = accountRepo.save(entity);
         return mapper.toResDto(saved);
