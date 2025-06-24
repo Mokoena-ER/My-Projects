@@ -7,6 +7,7 @@ import com.bank.mybank.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,10 @@ public class AccountController {
     }
 
     @PutMapping("/update")
-    public AccountResDto updateAccount(@RequestBody Account entity, @RequestBody AccountReqDto reqDto) {
+    public AccountResDto updateAccount(@RequestBody Account entity,
+                                       @RequestBody AccountReqDto reqDto)
+                                        throws AccountNotFoundException
+    {
         return accountService.updateAccount(entity, reqDto);
     }
 

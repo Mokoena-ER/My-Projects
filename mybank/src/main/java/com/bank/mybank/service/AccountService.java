@@ -8,6 +8,7 @@ import com.bank.mybank.repository.AccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -54,43 +55,38 @@ public class AccountService {
         return mapper.toResDto(saved);
     }
 
-    public AccountResDto updateAccount(Account entity, AccountReqDto reqDto) {
+    public AccountResDto updateAccount(Account entity, AccountReqDto reqDto) throws AccountNotFoundException {
         Account existingAccount = accountRepo.findByAccountNumber(entity.getAccountNumber());
+        if (existingAccount == null) {
+            throw new AccountNotFoundException("Account not found");
+        }
 
         if (reqDto.getAccountHolderName() != null && !reqDto.getAccountHolderName().isEmpty()) {
             existingAccount.setAccountHolderName(reqDto.getAccountHolderName());
-        }else {
-            existingAccount.setAccountHolderName(existingAccount.getAccountHolderName());
         }
+
         if ((reqDto.getAccountType() != null && !reqDto.getAccountType().isEmpty())){
             existingAccount.setAccountType(reqDto.getAccountType());
-        }else {
-            existingAccount.setAccountType(existingAccount.getAccountType());
         }
+
         if (reqDto.getEmail() != null && !reqDto.getEmail().isEmpty()) {
             existingAccount.setEmail(reqDto.getEmail());
-        }else {
-            existingAccount.setEmail(existingAccount.getEmail());
         }
+
         if (reqDto.getPhoneNumber() != null && !reqDto.getPhoneNumber().isEmpty()) {
             existingAccount.setPhoneNumber(reqDto.getPhoneNumber());
-        }else {
-            existingAccount.setPhoneNumber(existingAccount.getPhoneNumber());
         }
+
         if (reqDto.getNationality() != null && !reqDto.getNationality().isEmpty()) {
             existingAccount.setNationality(reqDto.getNationality());
-        }else {
-            existingAccount.setNationality(existingAccount.getNationality());
         }
+
         if (reqDto.getOccupation() != null && !reqDto.getOccupation().isEmpty()) {
             existingAccount.setOccupation(reqDto.getOccupation());
-        }else {
-            existingAccount.setOccupation(existingAccount.getOccupation());
         }
+
         if (reqDto.getAge() != null) {
             existingAccount.setAge(reqDto.getAge());
-        }else {
-            existingAccount.setAge(existingAccount.getAge());
         }
 
         existingAccount.setDateUpdated(LocalDateTime.now().withNano(0));
