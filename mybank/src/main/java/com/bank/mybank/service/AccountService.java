@@ -58,7 +58,7 @@ public class AccountService {
     public AccountResDto updateAccount(Account entity, AccountReqDto reqDto) throws AccountNotFoundException {
         Account existingAccount = accountRepo.findByAccountNumber(entity.getAccountNumber());
         if (existingAccount == null) {
-            throw new AccountNotFoundException("Account not found");
+            throw new AccountNotFoundException("The account "+entity.getAccountNumber()+" is not found!");
         }
 
         if (reqDto.getAccountHolderName() != null && !reqDto.getAccountHolderName().isEmpty()) {
