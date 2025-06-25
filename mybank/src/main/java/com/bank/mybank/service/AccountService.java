@@ -22,7 +22,7 @@ public class AccountService {
     private final AccountRepo accountRepo;
 
     @Autowired
-    private AccountMapper mapper;
+    private final AccountMapper mapper;
 
     public AccountService(AccountRepo accountRepo, AccountMapper mapper) {
         this.accountRepo = accountRepo;
@@ -30,13 +30,15 @@ public class AccountService {
     }
 
     public void setBranchCode(Account entity) {
-
         if (entity.getNationality().equalsIgnoreCase("RSA")) {
             entity.setBranchCode("470010");
         } else {
             entity.setBranchCode("470010-"+entity.getNationality().toUpperCase());
         }
+    }
 
+    public void updateStatus(Account entity) {
+        //once you deposit once, the status remain 'Active' even you have R0.00 again.
         if (entity.getBalance() > 0) {
             entity.setStatus("Active");
         }else {
@@ -50,6 +52,7 @@ public class AccountService {
         entity.setAccountNumber(String.valueOf(UUID.randomUUID()));
         entity.setDateCreated(LocalDateTime.now().withNano(0));
         setBranchCode(entity);
+        updateStatus(entity);
 
         Account saved = accountRepo.save(entity);
         return mapper.toResDto(saved);
