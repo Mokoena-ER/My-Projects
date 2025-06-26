@@ -10,7 +10,12 @@ import com.bank.mybank.repository.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -40,47 +45,59 @@ public class TransactionService {
     //withdraw method
     //view balance method
 
-   public void deposit(Transaction transaction, Account account) {
+    public void deposit(Transaction transaction, Account account) {
         if (transaction.getAmount() > 0) {
             account.setBalance(account.getBalance() + transaction.getAmount());
-            accountService.updateStatus(account);
-        }else {
-            throw new RuntimeException("Invalid amount!");
         }
-   }
+        else {
+            throw new RuntimeException("Insufficient funds to deposit: "+transaction.getAmount());
+        }
+    }
 
-   public void withdraw(Transaction transaction, Account account) {
+    public void withdraw(Transaction transaction, Account account) {
         if (transaction.getAmount() > 0 && transaction.getAmount() <= account.getBalance()) {
             account.setBalance(account.getBalance() - transaction.getAmount());
-        }else {
-            throw new RuntimeException("Invalid amount!");
         }
-   }
+        else {
+            throw new RuntimeException("Invalid funds to withdraw: "+transaction.getAmount());
+        }
+    }
 
-   public TransactionResDto makeTransaction(TransactionReqDto tranReqDto) {
+    public TransactionResDto transaction(TransactionReqDto reqDto) throws AccountNotFoundException {
 
-        Account existingAccount = accountRepo.findByAccountNumber(tranReqDto.getAccountNumber());
+        Transaction tranEntity = mapper.toTranEntity(reqDto);
+        Account existingAccount = accountRepo.findByAccountNumber(tranEntity.getAccountNumber());
 
-        Transaction entity = mapper.toTranEntity(tranReqDto);
-
-        if (existingAccount != null && existingAccount.getAccountNumber().equals(entity.getAccountNumber())) {
-            if (entity.getTransactionType().equalsIgnoreCase("Deposit")) {
-                deposit(entity, existingAccount);
-            } else if (entity.getTransactionType().equalsIgnoreCase("Withdraw")) {
-                withdraw(entity, existingAccount);
-            } else {
-                throw new RuntimeException("Invalid transaction type: ' "+entity.getTransactionType()+" '.");
+        if (existingAccount != null) {
+            if (tranEntity.getTransactionType().equalsIgnoreCase("Deposit")) {
+                deposit(tranEntity, existingAccount);
+                accountService.updateStatus(existingAccount);
             }
-        }else {
-            throw new RuntimeException("Invalid account number: "+tranReqDto.getAccountNumber());
+            else if (tranEntity.getTransactionType().equalsIgnoreCase("Withdraw")) {
+                withdraw(tranEntity, existingAccount);
+            }
+            else {
+                throw new RuntimeException("Invalid transaction, Deposit or Withdraw.");
+            }
+        }
+        else {
+            throw new AccountNotFoundException("Account Not Found");
         }
 
-        entity.setTransactionDate(LocalDateTime.now().withNano(0));
+        tranEntity.setTransactionDate(LocalDateTime.now().withNano(0));
 
-        Transaction saved = transactionRepo.save(entity);
         accountRepo.save(existingAccount);
+        Transaction saved = transactionRepo.save(tranEntity);
 
         return mapper.toTranResDto(saved);
-   }
+    }
+
+    public Map<String, List<TransactionResDto>> viewAllTransactions() {
+        return transactionRepo.findAll().stream()
+                .map(mapper::toTranResDto)
+                .collect(Collectors.groupingBy(t -> t.getAccountNumber()));
+    }
+
+
 
 }

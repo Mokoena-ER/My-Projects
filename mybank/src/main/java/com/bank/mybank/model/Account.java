@@ -29,7 +29,7 @@ public class Account {
     //branch
     private String accountNumber;
     private String branchCode;
-    private String status;
+    private String status = "Pending";
     private LocalDateTime dateCreated;
     private LocalDateTime dateUpdated;
     private double balance;

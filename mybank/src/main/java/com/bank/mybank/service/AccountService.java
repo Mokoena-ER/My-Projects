@@ -32,17 +32,15 @@ public class AccountService {
     public void setBranchCode(Account entity) {
         if (entity.getNationality().equalsIgnoreCase("RSA")) {
             entity.setBranchCode("470010");
-        } else {
+        }
+        else {
             entity.setBranchCode("470010-"+entity.getNationality().toUpperCase());
         }
     }
 
     public void updateStatus(Account entity) {
-        //once you deposit once, the status remain 'Active' even you have R0.00 again.
-        if (entity.getBalance() > 0) {
+        if (entity.getBalance() > 0 && entity.getStatus().equalsIgnoreCase("Pending")) {
             entity.setStatus("Active");
-        }else {
-            entity.setStatus("Pending");
         }
     }
 
