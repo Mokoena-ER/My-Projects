@@ -5,11 +5,11 @@ import com.bank.mybank.dto.AccountResDto;
 import com.bank.mybank.model.Account;
 import com.bank.mybank.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/account")
@@ -29,7 +29,7 @@ public class AccountController {
     }
 
     @GetMapping
-    public Map<String, List<AccountResDto>> viewAccount() {
+    public List<AccountResDto> viewAccounts() {
         return accountService.viewAccount();
     }
 
@@ -41,4 +41,8 @@ public class AccountController {
         return accountService.updateAccount(entity, reqDto);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<List<AccountResDto>> viewAccountById(@RequestParam Long Id) {
+        return ResponseEntity.ok(accountService.viewAccountById(Id));
+    }
 }

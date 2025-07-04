@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.security.auth.login.AccountNotFoundException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -98,10 +97,16 @@ public class AccountService {
         return mapper.toResDto(updated);
     }
 
-    public Map<String, List<AccountResDto>> viewAccount() {
+    public List<AccountResDto> viewAccount() {
         return accountRepo.findAll().stream()
                 .map(mapper::toResDto)
-                .collect(Collectors.groupingBy(a -> a.getOccupation()));
+                .collect(Collectors.toList());
+    }
+
+    public List<AccountResDto> viewAccountById(Long Id) {
+        return accountRepo.findById(Id).stream()
+                .map(mapper::toResDto)
+                .collect(Collectors.toList());
     }
 
 }

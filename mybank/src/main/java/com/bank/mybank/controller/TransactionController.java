@@ -4,6 +4,8 @@ import com.bank.mybank.dto.TransactionReqDto;
 import com.bank.mybank.dto.TransactionResDto;
 import com.bank.mybank.model.Transaction;
 import com.bank.mybank.service.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -15,6 +17,7 @@ import java.util.Map;
 @CrossOrigin("*")
 public class TransactionController {
 
+    @Autowired
     private final TransactionService transactionService;
 
     public TransactionController(TransactionService transactionService) {
@@ -22,12 +25,12 @@ public class TransactionController {
     }
 
     @PostMapping()
-    public TransactionResDto makeTransaction(@RequestBody TransactionReqDto tranReqDto) throws AccountNotFoundException {
-        return transactionService.transaction(tranReqDto);
+    public ResponseEntity<TransactionResDto> makeTransaction(@RequestBody TransactionReqDto tranReqDto) throws AccountNotFoundException {
+        return ResponseEntity.ok(transactionService.transaction(tranReqDto));
     }
 
-    @GetMapping
-    public Map<String, List<TransactionResDto>> viewTransactions() {
-        return transactionService.viewAllTransactions();
+    @GetMapping("/view")
+    public ResponseEntity<List<TransactionResDto>> viewTransactions() {
+        return ResponseEntity.ok(transactionService.viewAllTransactions());
     }
 }

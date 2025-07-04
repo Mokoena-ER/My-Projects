@@ -92,12 +92,10 @@ public class TransactionService {
         return mapper.toTranResDto(saved);
     }
 
-    public Map<String, List<TransactionResDto>> viewAllTransactions() {
+    public List<TransactionResDto> viewAllTransactions() {
         return transactionRepo.findAll().stream()
                 .map(mapper::toTranResDto)
-                .collect(Collectors.groupingBy(t -> t.getAccountNumber()));
+                .collect(Collectors.toList());
     }
-
-
 
 }
